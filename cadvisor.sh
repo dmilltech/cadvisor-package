@@ -3,7 +3,7 @@ set -e
 
 # I know, I know... I really try to avoid hacks, but it's just so hard...
 
-DIR=$(docker inspect rancher-agent | jq -r '.[0].Volumes["/var/log/rancher"]')
+DIR=$(docker inspect -f '{{ range .Mounts }}{{ if eq .Destination "/var/lib/cattle" }}{{ .Source }}{{ end }}{{ end }}' rancher-agent-state)
 
 if [ -z "$DIR" ]; then
     echo "Failed to find volume root" 1>&2
